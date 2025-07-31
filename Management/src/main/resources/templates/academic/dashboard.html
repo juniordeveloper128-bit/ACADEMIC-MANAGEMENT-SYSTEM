@@ -1,0 +1,243 @@
+<!-- templates/academic/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Master Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .results-list {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-info h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .result-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="container">
+        <h1>Academic Master Dashboard</h1>
+        <div class="user-info">
+            <span th:text="'Welcome, ' + ${academic.username}">Welcome, Academic Master</span>
+            <a href="/logout" class="btn-secondary">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>View Student Results</h3>
+            <form action="/academic/view-results" method="get">
+                <div class="form-group">
+                    <label for="className">Select Class:</label>
+                    <select id="className" name="className" required>
+                        <option value="">Choose a class</option>
+                        <option th:each="className : ${classNames}"
+                                th:value="${className}"
+                                th:text="${className}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sortBy">Sort By:</label>
+                    <select id="sortBy" name="sortBy">
+                        <option value="average">Highest Average</option>
+                        <option value="division">Division (I, II, III, IV, Zero)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">View Results</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Create Class Result</h3>
+            <form action="/academic/create-result" method="post">
+                <div class="form-group">
+                    <label for="resultClassName">Class Name:</label>
+                    <select id="resultClassName" name="className" required>
+                        <option value="">Choose a class</option>
+                        <option th:each="className : ${classNames}"
+                                th:value="${className}"
+                                th:text="${className}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="resultName">Result Name:</label>
+                    <input type="text" id="resultName" name="resultName"
+                           placeholder="e.g., Mid-term 2024, Final Exam" required>
+                </div>
+
+                <button type="submit" class="btn">Create Result</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="results-list" th:if="${classResults and !classResults.empty}">
+        <div class="results-header">
+            <h3>Recent Class Results</h3>
+        </div>
+        <div th:each="result : ${classResults}" class="result-item">
+            <div class="result-info">
+                <h4 th:text="${result.resultName}">Result Name</h4>
+                <div class="result-meta">
+                    <span th:text="${result.className}">Class Name</span> |
+                    <span th:text="${#temporals.format(result.createdAt, 'MMM dd, yyyy HH:mm')}">Date</span> |
+                    Created by <span th:text="${result.createdBy.username}">Creator</span>
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/academic/result/{id}(id=${result.id})}" class="btn">View Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Live Translation</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script defer src="/script.js"></script>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://www.google.com">
+    <link rel="preconnect" href="https://libretranslate.de">
+    <meta name="description" content="Translate captions from a YouTube live or recorded video into your language.">
+</head>
+<body>
+<header class="container">
+    <h1>YouTube Live Translation</h1>
+    <p class="tagline">Enter a YouTube video ID and a target language code (e.g., es, fr, de, hi)</p>
+</header>
+
+<main class="container grid">
+    <section class="card">
+        <h2>Video</h2>
+        <form id="video-form">
+            <label for="videoId">YouTube Video ID</label>
+            <input id="videoId" type="text" placeholder="e.g. dQw4w9WgXcQ" required>
+
+            <label for="targetLang">Target language (ISO code)</label>
+            <input id="targetLang" type="text" placeholder="e.g. es" required>
+
+            <label for="sourceLang">Source language (optional, ISO code)</label>
+            <input id="sourceLang" type="text" placeholder="auto">
+
+            <button type="submit">Load & Translate</button>
+        </form>
+        <div class="player-wrap">
+            <div id="player"></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Translated Captions</h2>
+        <div id="captions" class="captions"></div>
+    </section>
+</main>
+
+<footer class="container footer">
+    <small>Demo: translates sample caption lines client-side via backend. For true live captions, integrate YouTube Live Chat/CC APIs.</small>
+    <small>Note: This is a demo and may fall back to original text if translation fails.</small>
+    <div class="links">
+        <a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank" rel="noopener">YouTube IFrame API</a>
+        <a href="https://libretranslate.com/" target="_blank" rel="noopener">LibreTranslate</a>
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</footer>
+</body>
+</html>
+
